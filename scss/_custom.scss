@@ -1,0 +1,100 @@
+
+#sidebar{
+  background-color: $sidebar-color;
+  h1, h2, h3, h4,h5 {
+    font-family: $font-family-headers;
+    color: $headings-color!important;
+  }
+  h6{
+    font-family: $font-family-headers;
+    color: $input-color!important;
+    &:hover{
+      color:$headings-color!important;
+    }
+  }
+}
+button{
+  border-radius: 100px!important;
+  padding: 10px 34px;
+  transition: 0.5s;
+  &:hover{
+    background-color: $input-color!important;
+    color: white!important;
+  }
+}
+hr{
+  color: $headings-color!important;
+}
+.styled-list{
+  background-color: $tile-color;
+  border: 2px solid;
+  span{
+    border-radius: 100%!important;
+    border: 1px solid #fff;
+    color: #fff!important;
+    cursor: pointer;
+    &:hover{
+      background-color: $sidebar-color!important;
+      color: white!important;
+    }
+  }
+}
+.btn-h{
+  cursor: pointer;
+
+}
+.odd{
+  border-image: linear-gradient(45deg, #0b0b0b, #f3f3f3) 1!important;
+}
+.even{
+  border-image: linear-gradient(45deg, #f3f3f3, #0b0b0b) 1!important;
+}
+img{
+  max-width: 10%;
+}
+#main-content{
+  h4{
+    color: $sidebar-color!important;
+  }
+}
+#styled-hr{
+  color: $sidebar-color!important;
+}
+.simple-btn{
+  background-color: #fff!important;
+  border: none;
+  border-radius: 0;
+  font-weight: bold;
+}
+#save-btn{
+  background-color: $sidebar-color;
+  color:#fff!important;
+  border-radius: 8px;
+}
+form{
+  label{
+    font-weight: bold;
+  }
+  input{
+    background-color: $input-color!important;
+    border-radius: 0!important;
+    border-bottom: 2px solid $sidebar-color!important;
+    color: $sidebar-color !important;
+  }
+}
+#myModal{
+
+ border: 2px solid $sidebar-color!important;
+}
+/*@include media-breakpoint-up(md) {
+  body {
+    background-color: lighten($itFactory, 35%);
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  body {
+    background-color: lighten($itFactory, 30%);
+  }
+}
+*/
