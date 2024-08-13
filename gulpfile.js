@@ -4,14 +4,28 @@ import gulp from 'gulp';
 import browserSync from 'browser-sync';
 import plumber from 'gulp-plumber';
 import notify from 'gulp-notify';
+import newer from 'gulp-newer';
 import sass from 'gulp-dart-sass';
 import prefix from 'gulp-autoprefixer';
 import sourcemaps from 'gulp-sourcemaps';
 import gcmqp from 'gulp-css-mqpacker';
 
-// Compile sass into CSS (/dist/css/)
-gulp.task('sass', () => {
-    return gulp.src('./scss/**/*.scss')
+// Needed for production (gulp build)
+import { deleteAsync } from 'del';
+
+// Copy Bootstrap JS-file
+gulp.task('copy-js', () =>
+    gulp
+        .src(['node_modules/bootstrap/dist/js/bootstrap.bundle.min.js'])
+        .pipe(newer('./src/js'))
+        .pipe(notify({ message: 'Copy JS files' }))
+        .pipe(gulp.dest('./src/js'))
+);
+
+// Compile sass into CSS (/src/css/)
+gulp.task('sass', () =>
+    gulp
+        .src('./scss/**/*.scss')
         .pipe(
             plumber({
                 errorHandler: notify.onError({
@@ -22,28 +36,36 @@ gulp.task('sass', () => {
         )
         .pipe(sourcemaps.init())
         // outputStyle: expanded or compressed
-        .pipe(sass.sync({outputStyle: 'expanded'}).on('error', sass.logError))
+        .pipe(sass.sync({ outputStyle: 'expanded' }).on('error', sass.logError))
         .pipe(prefix('last 2 versions'))
         .pipe(gcmqp())
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('./dist/css'));
-});
+        .pipe(gulp.dest('./src/css'))
+);
 
 // Live-reload the browser
 gulp.task('browser-sync', () => {
     browserSync.init({
+        startPath: '/index.html',
+        port: 7777,
         server: {
-            baseDir: './dist',
+            baseDir: './src',
             directory: true,
         },
-        startPath: '/index.html',
-        port: 6600,
         ui: {
-            port: 6602
-        }
+            port: 7779,
+        },
     });
     gulp.watch('./scss/**/*.scss', gulp.series('sass'));
-    gulp.watch('./dist/**/*.{html,css,js}').on('change', browserSync.reload);
+    gulp.watch('./src/**/*.{html,css,js}').on('change', browserSync.reload);
 });
 
-gulp.task('default', gulp.series('sass', 'browser-sync'));
+// Delete all files and folders inside the dist folder
+gulp.task('clean', () => deleteAsync(['dist/**/*']));
+
+// Copy files from ./src to ./dist
+gulp.task('copy', () => gulp.src('./src/**/*').pipe(gulp.dest('./dist')));
+
+
+gulp.task('build', gulp.series('clean', 'copy-js', 'sass', 'copy'));
+gulp.task('default', gulp.series('copy-js', 'sass', 'browser-sync'));
